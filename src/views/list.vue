@@ -427,6 +427,29 @@ import axios from 'axios';
                   sharePikPakUrl.value = ''
                   showSharePikPak.value = true
                   break
+                  case 'openPot':
+                   getFile(row.id)
+                        .then((res:any) => {
+                           if(row.mime_type.indexOf('video') != -1 || row.mime_type.indexOf('audio') != -1) {
+                                  let group : VNode[] = [];
+                                  for (let i = 0; i < res.data.medias.length; i++) {
+                                    group.push(h('div', h('a', {'style':'color: rgb(48, 110, 255)','target':'_blank','href':'potplayer://'+res.data.medias[i].link.url,'text':res.data.medias[i].media_name})));
+                                  }
+                                  dialog.info({
+                                      title: '自定义操作',
+                                      content: () => h('div', group),
+                                      negativeText: '关闭'
+                                    })
+                                  return 
+                            }else{
+                               dialog.info({
+                                      title: '非媒体文件无法用Potplayer打开',
+                                      negativeText: '关闭'
+                                    })
+                                  return
+                            }
+                        })
+                        break
                 case 'openVLC':
                    getFile(row.id)
                         .then((res:any) => {
@@ -1123,6 +1146,11 @@ import axios from 'axios';
       {
         label: '直接分享',
         key: 'sharePikPak',
+        disabled: row.kind === 'drive#folder'
+      },
+      {
+        label: 'PotPlayer打开',
+        key: 'openPot',
         disabled: row.kind === 'drive#folder'
       },
       {
