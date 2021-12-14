@@ -394,11 +394,8 @@ import axios from 'axios';
                 case 'copyDown':
                   getFile(row.id)
                     .then((res:any) => {
-                      if(row.mime_type.indexOf('video') != -1 || row.mime_type.indexOf('audio') != -1) {
-                          copy(res.data.medias[0].link.url)
-                          return 
-                      }
-                      copy(res.data.web_content_link)
+                      fileInfo.value = res.data
+                      showCopy.value = true
                     })
                   break
                 case 'aria2Post':
